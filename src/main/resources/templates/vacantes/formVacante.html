@@ -12,7 +12,7 @@
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link th:href="@{/css/jumbotron.css}" rel="stylesheet">
-    <link th:href="@{bootstrap/css/sticky-footer-navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" >
   </head>
 
@@ -135,10 +135,12 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>    
-    <script src="tinymce/tinymce.min.js"></script>
+    <script th:href="@{/js/bootstrap.min.js}"></script>
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+    
     <script>
       
       $(function () {
@@ -146,15 +148,15 @@
         }
       );
       
-      /*
+      
       tinymce.init({
-          selector: '#detalles',
+          selector: "#detalles",
           plugins: "textcolor, table lists code",
           toolbar: " undo redo | bold italic | alignleft aligncenter alignright alignjustify \n\
                     | bullist numlist outdent indent | forecolor backcolor table code"
       });
       
-      */
+      
       
     </script>
   </body>
