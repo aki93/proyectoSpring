@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/vacantes")
@@ -45,7 +46,7 @@ public class VacantesController {
     
     
     @PostMapping("/save")
-    public String guardar(Vacante vacante, BindingResult result){
+    public String guardar(Vacante vacante, BindingResult result, RedirectAttributes attributes){
     if(result.hasErrors()){
         for(ObjectError error: result.getAllErrors()){
     System.out.println("Error:" + error.getDefaultMessage());
@@ -54,6 +55,7 @@ public class VacantesController {
     }
     
         serviceVacantes.guardar(vacante);
+        attributes.addFlashAttribute("msg","Registro Guardado");
         System.out.println(vacante);
         return "redirect:/vacantes/index";
     } 
