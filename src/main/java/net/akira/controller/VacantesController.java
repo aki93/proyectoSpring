@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import net.akira.model.Vacante;
+import net.akira.service.ICategoriasService;
 import net.akira.service.IVacantesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -28,6 +29,9 @@ public class VacantesController {
     @Autowired
     private IVacantesService serviceVacantes;
     
+    @Autowired
+    private ICategoriasService serviceCategorias;
+    
     
     @GetMapping("/index")
     public String mostrarIndex (Model model){
@@ -40,8 +44,9 @@ public class VacantesController {
     } 
     
     @GetMapping("/create")
-    public String crear(Vacante vacante){
-    return "vacantes/formVacante";
+    public String crear(Vacante vacante, Model model){
+        model.addAttribute("categorias", serviceCategorias.buscarTodas() );
+        return "vacantes/formVacante";
     }
     
     

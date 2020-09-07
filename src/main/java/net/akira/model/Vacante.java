@@ -24,6 +24,7 @@ public class Vacante {
     private String estatus;
     private int destacado;
     private String imagen="no-image.png";
+    private Categoria categoria;
 
     /**
      * @return the id
@@ -125,7 +126,10 @@ public class Vacante {
     
     @Override
     public String toString(){
-    return "Vacante[id =" + id + ",nombre =" + nombre + ",descripcion =" + descripcion + ",fecha =" + fecha + "salario =" + salario + ",Detalles" + detalles + ",Estatus" + estatus + "]";
+    return "Vacante[id =" + id + ",nombre =" + nombre 
+            + ",descripcion =" + descripcion + ",fecha =" + fecha 
+            + "salario =" + salario + ",Detalles" + detalles 
+            + ",Estatus" + estatus + ",Categoria" + categoria + "]";
     }
 
     /**
@@ -154,6 +158,20 @@ public class Vacante {
      */
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    /**
+     * @return the categoria
+     */
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    /**
+     * @param categoria the categoria to set
+     */
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
     
     
