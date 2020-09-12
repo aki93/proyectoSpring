@@ -7,6 +7,7 @@ import java.util.List;
 import net.akira.model.Vacante;
 import net.akira.service.ICategoriasService;
 import net.akira.service.IVacantesService;
+import net.akira.util.Utileria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -51,7 +53,8 @@ public class VacantesController {
     
     
     @PostMapping("/save")
-    public String guardar(Vacante vacante, BindingResult result, RedirectAttributes attributes){
+    public String guardar(Vacante vacante, BindingResult result, RedirectAttributes attributes,
+                          @RequestParam ("archivoImagen")  MultipartFile multiPart ){
     if(result.hasErrors()){
         for(ObjectError error: result.getAllErrors()){
     System.out.println("Error:" + error.getDefaultMessage());
@@ -59,6 +62,16 @@ public class VacantesController {
     return "vacantes/formVacante";
     }
     
+        if (!multiPart.isEmpty()) {
+//String ruta = "/empleos/img-vacantes/"; // Linux/MAC
+            String ruta = "c:/empleos/img-vacantes/"; // Windows
+            String nombreImagen = Utileria.guardarArchivo(multiPart, ruta);
+            if (nombreImagen != null) { // La imagen si se subio
+// Procesamos la variable nombreImagen
+                vacante.setImagen(nombreImagen);
+            }
+        }
+
         serviceVacantes.guardar(vacante);
         attributes.addFlashAttribute("msg","Registro Guardado");
         System.out.println(vacante);
