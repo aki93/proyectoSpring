@@ -80,7 +80,7 @@ public class VacantesServiceImpl implements IVacantesService{
     }
 
     @Override
-    public Vacante buscarPorId(int idVacante) {
+    public Vacante buscarPorId(Integer idVacante) {
        for (Vacante v : lista)
            if (v.getId()== idVacante){
            return v;

@@ -6,14 +6,26 @@
 package net.akira.model;
 
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
  * @author Nikkai
  */
+@Entity
+@Table(name="Vacantes")
+
 public class Vacante {
 
-
+@Id
+@GeneratedValue(strategy=GenerationType.IDENTITY)
     
     private int id;
     private String nombre;
@@ -24,6 +36,10 @@ public class Vacante {
     private String estatus;
     private int destacado;
     private String imagen="no-image.png";
+    
+    //@Transient   ignora el mapeo para evitar errores
+    @OneToOne
+    @JoinColumn(name="idCategoria")
     private Categoria categoria;
 
     /**
