@@ -24,17 +24,31 @@ import javax.persistence.Transient;
 
 public class Vacante {
 
+    /**
+     * @return the salario
+     */
+    public Double getSalario() {
+        return salario;
+    }
+
+    /**
+     * @param salario the salario to set
+     */
+    public void setSalario(Double salario) {
+        this.salario = salario;
+    }
+
 @Id
 @GeneratedValue(strategy=GenerationType.IDENTITY)
     
-    private int id;
+    private Integer id;
     private String nombre;
     private String descripcion;
     private Date fecha;
-    private double salario;
+    private Double salario;
     private String detalles;
     private String estatus;
-    private int destacado;
+    private Integer destacado;
     private String imagen="no-image.png";
     
     //@Transient   ignora el mapeo para evitar errores
@@ -45,14 +59,14 @@ public class Vacante {
     /**
      * @return the id
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -98,19 +112,7 @@ public class Vacante {
         this.fecha = fecha;
     }
 
-    /**
-     * @return the salario
-     */
-    public double getSalario() {
-        return salario;
-    }
-
-    /**
-     * @param salario the salario to set
-     */
-    public void setSalario(double salario) {
-        this.salario = salario;
-    }
+ 
     
         /**
      * @return the detalles
@@ -144,21 +146,21 @@ public class Vacante {
     public String toString(){
     return "Vacante[id =" + id + ",nombre =" + nombre 
             + ",descripcion =" + descripcion + ",fecha =" + fecha 
-            + "salario =" + salario + ",Detalles" + detalles 
+            + "salario =" + getSalario() + ",Detalles" + detalles 
             + ",Estatus" + estatus + ",Categoria" + categoria + "]";
     }
 
     /**
      * @return the destacado
      */
-    public int getDestacado() {
+    public Integer getDestacado() {
         return destacado;
     }
 
     /**
      * @param destacado the destacado to set
      */
-    public void setDestacado(int destacado) {
+    public void setDestacado(Integer destacado) {
         this.destacado = destacado;
     }
 
@@ -189,6 +191,11 @@ public class Vacante {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
+    
+    public void reset(){
+this.imagen = null;
+
+}
     
     
 }

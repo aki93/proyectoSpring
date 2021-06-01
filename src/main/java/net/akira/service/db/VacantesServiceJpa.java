@@ -12,6 +12,9 @@ import net.akira.repository.VacantesRepository;
 import net.akira.service.IVacantesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,7 +38,7 @@ public class VacantesServiceJpa implements IVacantesService {
     public Vacante buscarPorId(Integer idVacante) {
         Optional<Vacante> optional = vacantesRepo.findById(idVacante);
         if(optional.isPresent()){
-        optional.get();
+        return optional.get();
         }
         return null;
     }
@@ -43,6 +46,26 @@ public class VacantesServiceJpa implements IVacantesService {
     @Override
     public void guardar(Vacante vacante) {
         vacantesRepo.save(vacante);
+    }
+
+    @Override
+    public List<Vacante> buscarDestacadas() {
+        return vacantesRepo.findByDestacadoAndEstatusOrderByIdDesc(1, "Aprobada");
+    }
+
+    @Override
+    public void borrarVacante(Integer idVacante) {
+        vacantesRepo.deleteById(idVacante);
+    }
+
+    @Override
+    public List<Vacante> buscarByExample(Example<Vacante> example) {
+        return vacantesRepo.findAll(example);
+    }
+
+    @Override
+    public Page<Vacante> buscarTodasPage(Pageable page) {
+        return vacantesRepo.findAll(page);
     }
     
 }

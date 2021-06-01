@@ -43,8 +43,10 @@ and open the template in the editor.
               <div class="row">
                 <div class="col-md-6"> 
                   <div class="form-group">
-                    <label for="nombre">ID</label>
-                    <input type="text" class="form-control" id="id" name="id" placeholder="Escriba el id de la categoria" required="required">
+                    <input type="hidden" th:field="*{id}">
+                    
+                      <label for="nombre">ID</label>
+                    <input type="text" class="form-control" th:field="*{id}" id="id" name="id" placeholder="Escriba el id de la categoria" required="required">
                   </div>
                 </div>                
               </div>
@@ -52,7 +54,7 @@ and open the template in the editor.
                 <div class="col-md-6"> 
                   <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre de la categoria" required="required">
+                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" name="nombre" placeholder="Escriba el nombre de la categoria" required="required">
                   </div>
                 </div>                
               </div> 
@@ -60,7 +62,7 @@ and open the template in the editor.
                 <div class="col-md-6"> 
                   <div class="form-group">
                     <label for="descripcion">Descripción</label>
-                    <textarea class="form-control" name="descripcion" id="descripcion" rows="2"></textarea>
+                    <textarea class="form-control" th:field="*{descripcion}" name="descripcion" id="descripcion" rows="2"></textarea>
                   </div> 
                 </div>                
               </div> 

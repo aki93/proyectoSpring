@@ -1,127 +1,212 @@
-
 package net.akira.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import net.akira.model.Categoria;
+import net.akira.model.Perfil;
+import net.akira.model.Usuario;
 import net.akira.model.Vacante;
+import net.akira.service.ICategoriasService;
+import net.akira.service.IUsuariosService;
 import net.akira.service.IVacantesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 public class HomeController {
-    
+
+    @Autowired
+    private ICategoriasService serviceCategorias;
+
     @Autowired
     private IVacantesService serviceVacantes;
-    
+
+    @Autowired
+    private IUsuariosService serviceUsuario;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/tabla")
-    public String mostrarTabla(Model model){
-    List<Vacante> lista = serviceVacantes.buscarTodas();
-    
-    model.addAttribute("vacantes", lista);
-    
-    return "tabla";
-    
+    public String mostrarTabla(Model model) {
+        List<Vacante> lista = serviceVacantes.buscarTodas();
+        model.addAttribute("vacantes", lista);
+
+        return "tabla";
+
     }
-    
+
     @GetMapping("/detalle")
-    public String mostarDetalle(Model model){
+    public String mostarDetalle(Model model) {
         Vacante vacante = new Vacante();
         vacante.setNombre("Ing.Sist");
         vacante.setDescripcion("Se solicita Ingeniero");
         vacante.setFecha(new Date());
         vacante.setSalario(9700.0);
+        Categoria categoria = new Categoria();
+        vacante.setCategoria(categoria);
         model.addAttribute("vacante", vacante);
-        
+
         return "detalle";
-    
+
     }
-    
+
     @GetMapping("/listado")
-    public String mostrarListado(Model model){
-    List<String> lista = new LinkedList<String>();
-    
-    lista.add("Ing. Sistemas");
-    lista.add("Aux. Contabilidad");
-    lista.add("Vendedor");
-    lista.add("Arquitecto");
-    
-    model.addAttribute("empleos", lista);
-    return "listado";
-    
+    public String mostrarListado(Model model) {
+        List<String> lista = new LinkedList<String>();
+
+        lista.add("Ing. Sistemas");
+        lista.add("Aux. Contabilidad");
+        lista.add("Vendedor");
+        lista.add("Arquitecto");
+
+        model.addAttribute("empleos", lista);
+        return "listado";
+
     }
-    
+
     @GetMapping("/")
-    public String mostrarhome(Model model){
+    public String mostrarhome(Model model) {
         /*
         model.addAttribute("mensaje", "Bienvenidos a Empleos App");
         model.addAttribute("fecha" , new Date());
-        */
-        List<Vacante> lista = serviceVacantes.buscarTodas();
-    
-        model.addAttribute("vacantes", lista);
+         */
+
+        //reemplazado por metodo setGenericos (serviceVacantes.buscarDestacadas)
+        //List<Vacante> lista = serviceVacantes.buscarTodas();
+        //model.addAttribute("vacantes", lista);
+        return "home";
+    }
+
+    @GetMapping("/login")
+    public String mostrarLogin() {
+        return "formLogin";
+    }
+
+    @GetMapping("/logout")
+    public String cerrarSession(HttpServletRequest request) {
+        SecurityContextLogoutHandler logoutHandler
+                = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, null, null);
+        return "redirect:/login";
+
+    }
+
+    @GetMapping("/index")
+    public String mostrarIndex(Authentication auth, HttpSession session) {
+        String username = auth.getName();
+        System.out.println("Nombre de usuario: " + username);
+
+        for (GrantedAuthority rol : auth.getAuthorities()) {
+            System.out.println("ROL: " + rol.getAuthority());
+        }
+
+        if (session.getAttribute("usuario") == null) {
+            Usuario usuario = serviceUsuario.buscarPorUsername(username);
+            usuario.setPassword(null);
+            System.out.println("usuario: " + usuario);
+            session.setAttribute("usuario", usuario);
+        }
+        return "redirect:/";
+
+    }
+
+    //Metodos USUARIOS
+    @GetMapping("/signup")
+    public String registrarse(Usuario usuario) {
         
-    return "home";
-}
-    
-    /* Borrado en leccion 39
-    /Se reemplaza con la Inteface de Servicio
-    /Metodos @Autowired (en Controlador) y @Service (en VacantesServiceImpl, Clase de Servicio)
-    private List<Vacante> getVacantes(){
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
-    List<Vacante> lista = new LinkedList<Vacante>();
-    
-    try{
-    Vacante vacante1 = new Vacante();
-    vacante1.setImagen("empresa1.png");
-    vacante1.setId(1);
-    vacante1.setNombre("Ingeniero Civil");
-    vacante1.setDescripcion("Se solicita ing.civil");
-    vacante1.setFecha(sdf.parse("08-02-2019"));
-    vacante1.setSalario(8500);
-    vacante1.setDestacado(1);
-    
-    Vacante vacante2 = new Vacante();
-    vacante2.setImagen("empresa2.png");
-    vacante2.setId(2);
-    vacante2.setNombre("Ingeniero electrico");
-    vacante2.setDescripcion("Se solicita ing.electrico");
-    vacante2.setFecha(sdf.parse("09-02-2019"));
-    vacante2.setSalario(9500);
-    vacante2.setDestacado(0);
-    
-    Vacante vacante3 = new Vacante();
-    vacante3.setId(3);
-    vacante3.setNombre("Ingeniero industrial");
-    vacante3.setDescripcion("Se solicita ing.industrial");
-    vacante3.setFecha(sdf.parse("03-02-2019"));
-    vacante3.setSalario(11500);
-    vacante3.setDestacado(0);
-    
-    Vacante vacante4 = new Vacante();
-    vacante4.setImagen("empresa4.png");
-    vacante4.setId(4);
-    vacante4.setNombre("Ingeniero agronomo");
-    vacante4.setDescripcion("Se solicita ing.agronomo");
-    vacante4.setFecha(sdf.parse("25-02-2019"));
-    vacante4.setSalario(12500);
-    vacante4.setDestacado(1);
-    
-    lista.add(vacante1);
-    lista.add(vacante2);
-    lista.add(vacante3);
-    lista.add(vacante4);
-    
-    
-    }catch (ParseException e){
-    System.out.println("Error: " + e.getMessage());
+        return "usuarios/formRegistro";
     }
-    return lista;
-    
+
+    @PostMapping("/signup")
+    public String guardarUsuario(Usuario usuario, BindingResult result, RedirectAttributes attributes, Date fechaRegistro) {
+        if (result.hasErrors()) {
+            for (ObjectError error : result.getAllErrors()) {
+                System.out.println("Error:" + error.getDefaultMessage());
+            }
+            return "usuarios/formRegistro";
+        }
+        String pwdPlano = usuario.getPassword();
+        String pwdEncriptado = passwordEncoder.encode(pwdPlano);
+        usuario.setPassword(pwdEncriptado);
+        Perfil per1 = new Perfil();
+        per1.setId(4);
+
+        usuario.setEstatus(1);
+        usuario.agregar(per1);
+        usuario.setFechaRegistro(new Date());
+        serviceUsuario.guardar(usuario);
+        attributes.addFlashAttribute("msg", "Registro Guardado");
+        System.out.println(usuario);
+        return "redirect:/";
+
     }
-    */
+
+    //Metodo search para formulario de busqueda de ofertas de trabajo
+    @GetMapping("/search")
+    //parametro para el databinding del objeto (search)
+    public String buscar(@ModelAttribute("search") Vacante vacante, Model model) {
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("descripcion", ExampleMatcher.GenericPropertyMatchers.contains());
+
+        Example<Vacante> example = Example.of(vacante, matcher);
+        List<Vacante> lista = serviceVacantes.buscarByExample(example);
+        model.addAttribute("vacantes", lista);
+        System.out.println("Buscando por: " + vacante);
+        return "home";
+    }
+
+    /*
+    utileria para encriptar passwords con el algoritmo BCprypt en el controlador
+    sireve para encriptar passwords que ya estan dentro de la DB como planos.
+     */
+    @GetMapping("/bcrypt/{texto}")
+    //al hace la peticion al metodo se regresara el texto
+    @ResponseBody
+    public String encriptar(@PathVariable("texto") String texto) {
+        return texto + "Encriptado en BCrypt: " + passwordEncoder.encode(texto);
+
+    }
+
+    /*
+    *InitBinder para Strings si los detecta vacios en el DataBinding los setea a "null"
+    @Param Binder
+     */
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }
+
+    @ModelAttribute
+    public void setGenericos(Model model) {
+        //objeto tipo Vacante para databinding del formulario de "Busqueda"    
+        Vacante vacanteSearch = new Vacante();
+        vacanteSearch.reset();
+        model.addAttribute("search", vacanteSearch);
+        model.addAttribute("vacantes", serviceVacantes.buscarDestacadas());
+        model.addAttribute("categorias", serviceCategorias.buscarTodas());
+    }
+
 }

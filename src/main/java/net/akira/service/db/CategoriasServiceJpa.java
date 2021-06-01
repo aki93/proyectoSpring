@@ -12,6 +12,8 @@ import net.akira.repository.CategoriasRepository;
 import net.akira.service.ICategoriasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,5 +46,16 @@ public class CategoriasServiceJpa implements ICategoriasService {
         }
         return null;  
     }
+
+    @Override
+    public void eliminar(Integer idCategoria) {
+        categoriasRepo.deleteById(idCategoria);
+    }
+
+    @Override
+    public Page<Categoria> buscarTogasPage(Pageable page) {
+        return categoriasRepo.findAll(page);
+    }
+       
     
 }

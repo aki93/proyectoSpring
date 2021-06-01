@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import net.akira.model.Categoria;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -75,6 +77,16 @@ public class CategoriasServiceImpl implements ICategoriasService {
     }
         
         return null;
+    }
+
+    @Override
+    public void eliminar(Integer idCategoria) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Page<Categoria> buscarTogasPage(Pageable page) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

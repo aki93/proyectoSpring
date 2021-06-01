@@ -5,15 +5,9 @@
  */
 package net.akira.repository;
 
-
-import net.akira.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import net.akira.model.Solicitud;
 
-/**
- *
- * @author Ice Cold
- */
-public interface UsuariosRepository extends JpaRepository <Usuario , Integer> {
-    Usuario findByUsername(String username);
-    
+public interface SolicitudesRepository extends JpaRepository<Solicitud, Integer> {
+
 }
